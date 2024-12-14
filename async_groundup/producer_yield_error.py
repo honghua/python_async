@@ -27,11 +27,11 @@ class Scheduler:
                 except StopIteration:
                     pass
             else:
-                ttl, task = heapq.heappop(self.sleeping)
+                ttl, self.task = heapq.heappop(self.sleeping)
                 delay = ttl - time.time()
                 if delay > 0:
                     time.sleep(delay)
-                self.ready.append(task)
+                self.ready.append(self.task)
     
 
 sched = Scheduler()
@@ -93,5 +93,28 @@ def consumer(q, name=""):
 
 sched.add_task(producer(q, 10))
 sched.add_task(consumer(q, "A"))
-# sched.add_task(consumer(q, "B"))
+sched.add_task(consumer(q, "B"))
 sched.run()
+
+
+# ------- yield from
+# def yieldo():
+#     yield from [1,2,3]
+    
+
+# for i in yieldo():
+#     print(i)
+
+
+# d = yieldo()
+# while True:
+#     print(next(d))
+    
+    
+# ------- pipe
+# def writer():
+#     """A coroutine that writes data *sent* to it to fd, socket, etc."""
+#     while True:
+#         w = (yield)
+#         print('>> ', w)
+
