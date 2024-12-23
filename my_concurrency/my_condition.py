@@ -2,24 +2,24 @@ from collections import deque
 from threading import Lock
 
 class Condition:
-    def __init__(self, lock: Lock):
+    def __init__(self, lock):
+        self.waiters = deque()
         self.lock = lock
-        self.waiting_threads = deque()
 
-    
     def wait(self):
-        thread_lock = Lock()
-        thread_lock.acquire()
-        self.waiting_threads.append(thread_lock)
-
+        waiter = Lock()
+        waiter.acquire()
+        self.waiters.append(waiter)
+        
         self.lock.release()
 
         try:
-            thread_lock.acquire() # waiting
+            waiter.acquire()  # acquire lock 2nd time makes os waiting for the current thread!!!
         finally:
             self.lock.acquire()
-    
+        
+        
     def notify(self):
-        if self.waiting_threads:
-            thread_lock = self.waiting_threads.popleft()
-            thread_lock.release()
+        if self.waiters:
+            waiter = self.waiters.popleft()
+            waiter.release()

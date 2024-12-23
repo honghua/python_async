@@ -3,29 +3,8 @@ import queue
 import time
 import threading
 
-# --------------------------------
-class Condition:
-    def __init__(self, lock):
-        self.waiters = deque()
-        self.lock = lock
-
-    def wait(self):
-        waiter = threading.Lock()
-        waiter.acquire()
-        self.waiters.append(waiter)
-        
-        self.lock.release()
-
-        waiter.acquire()  # acquire lock 2nd time makes os waiting for the current thread!!!
-        self.lock.acquire()
-        waiter.release()
-        
-        
-        
-    def notify(self):
-        if self.waiters:
-            waiter = self.waiters.popleft()
-            waiter.release()
+# -------------------------------
+import my_condition
 
 #   c c c       L     dining area [  i  ]
 #               p
@@ -35,7 +14,7 @@ class Queue:
     def __init__(self):
         self.lock = threading.Lock()
         self.items = deque()
-        self.not_empty = Condition(self.lock)
+        self.not_empty = my_condition.Condition(self.lock)
     
     def get(self): # how to block on get???
         with self.lock:
@@ -68,7 +47,7 @@ def consumer(q, name=""):
 
 
 # q = queue.Queue() # blocking queue
-q = Queue()         # non-blocking queue
+q = Queue()
 threading.Thread(target=producer, args=(q, 10)).start()
 threading.Thread(target=consumer, args=(q, "A")).start()
 threading.Thread(target=consumer, args=(q, "B")).start()
