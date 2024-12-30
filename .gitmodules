@@ -1,3 +1,6 @@
 [submodule "effective_python_com/src"]
 	path = effective_python_com/src
 	url = https://github.com/bslatkin/effectivepython.git
+[submodule "dabeaz/build_your_own_async"]
+	path = dabeaz/build_your_own_async
+	url = https://gist.github.com/f86ded8d61206c757c5cd4dbb5109f74.git
