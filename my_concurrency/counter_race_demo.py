@@ -1,24 +1,24 @@
 import threading
-import time
-import random
 
-num = 0
+global_num = 0
 
 def add_repeat(count):
-    global num
+    global global_num
     for _ in range(count):
-        time.sleep(random.uniform(0, 0.000001))
-        num += 1
+        global_num += 1
 
 
-print(num)
 count = 1000_000
-t1 = threading.Thread(target=add_repeat, args=(count,))
-t1.start()
+threads_count = 2
+threads = []
 
-t2 = threading.Thread(target=add_repeat, args=(count,))
-t2.start()
+for _ in range(threads_count):
+    t = threading.Thread(target=add_repeat, args=(count,))
+    t.start()
+    threads.append(t)
 
-t1.join()
-t2.join()
-print(num)
+for t in threads:
+    t.join()
+
+
+print(f'expect {threads_count * count}, got {global_num}')
