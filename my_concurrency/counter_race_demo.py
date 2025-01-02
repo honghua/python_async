@@ -2,10 +2,13 @@ import threading
 
 global_num = 0
 
+def get_one():
+    return 1
+
 def add_repeat(count):
     global global_num
     for _ in range(count):
-        global_num += 1
+        global_num += get_one()
 
 
 count = 1000_000
